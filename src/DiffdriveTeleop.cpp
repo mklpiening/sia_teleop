@@ -1,7 +1,5 @@
 #include "sia_teleop/DiffdriveTeleop.hpp"
 
-#include <iostream>
-
 DiffdriveTeleop::DiffdriveTeleop(float linearAcceleration,
                                  float angularAcceleration,
                                  float maxLinearVelocity,
@@ -90,13 +88,4 @@ void DiffdriveTeleop::updateVelocity(const ros::TimerEvent& t_event)
     }
 
     m_velPublisher.publish(m_velCommand);
-}
-
-int main(char** argv, int argc)
-{
-    ros::init(argc, argv, "sia_diffdrive_joy");
-
-    DiffdriveTeleop teleop();
-
-    ros::spin();
 }

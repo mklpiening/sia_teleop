@@ -15,6 +15,7 @@ catkin_package(
 
 set(SIA_TELEOP_SOURCES
   src/DiffdriveTeleop.cpp
+  src/AckermannToDiffdriveTeleop.cpp
 )
 
 ###########
@@ -26,7 +27,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(sia_teleop_joy ${SIA_TELEOP_SOURCES})
+add_executable(sia_teleop_joy ${SIA_TELEOP_SOURCES} src/AckermannToDiffdriveTeleopJoy.cpp)
 target_link_libraries(sia_teleop_joy ${catkin_LIBRARIES})
 add_dependencies(sia_teleop_joy ${catkin_EXPORTED_TARGETS})
 
