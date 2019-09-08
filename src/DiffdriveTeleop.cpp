@@ -31,7 +31,7 @@ void DiffdriveTeleop::updateVelocity(const ros::TimerEvent& t_event)
 {
     if (m_velCommand.linear.x < m_targetLinearVelocity)
     {
-        m_velCommand.linear.x += m_linearAcceleration;
+        m_velCommand.linear.x += m_linearAcceleration / 10;
 
         if (m_velCommand.linear.x > m_maxLinearVelocity)
         {
@@ -45,7 +45,7 @@ void DiffdriveTeleop::updateVelocity(const ros::TimerEvent& t_event)
     }
     else if (m_velCommand.linear.x > m_targetLinearVelocity)
     {
-        m_velCommand.linear.x -= m_linearAcceleration;
+        m_velCommand.linear.x -= m_linearAcceleration / 10;
 
         if (m_velCommand.linear.x < -m_maxLinearVelocity)
         {
@@ -60,7 +60,7 @@ void DiffdriveTeleop::updateVelocity(const ros::TimerEvent& t_event)
 
     if (m_velCommand.angular.z < m_targetAngularVelocity)
     {
-        m_velCommand.angular.z += m_angularAcceleration;
+        m_velCommand.angular.z += m_angularAcceleration / 10;
 
         if (m_velCommand.angular.z > m_maxAngularVelocity)
         {
@@ -74,7 +74,7 @@ void DiffdriveTeleop::updateVelocity(const ros::TimerEvent& t_event)
     }
     else if (m_velCommand.angular.z > m_targetAngularVelocity)
     {
-        m_velCommand.angular.z -= m_angularAcceleration;
+        m_velCommand.angular.z -= m_angularAcceleration / 10;
 
         if (m_velCommand.angular.z < -m_maxAngularVelocity)
         {
