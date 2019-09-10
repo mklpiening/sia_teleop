@@ -13,6 +13,14 @@ AckermannToDiffdriveTeleop::AckermannToDiffdriveTeleop(float linearAcceleration,
 void AckermannToDiffdriveTeleop::setSteeringWheelAngle(float angle)
 {
     m_steeringAngle = angle;
+    if (m_steeringAngle > 1)
+    {
+        m_steeringAngle = 1;
+    }
+    else if (m_steeringAngle < -1)
+    {
+        m_steeringAngle = -1;
+    }
 
     applyDiffdriveVelocity();
 }
@@ -20,6 +28,14 @@ void AckermannToDiffdriveTeleop::setSteeringWheelAngle(float angle)
 void AckermannToDiffdriveTeleop::setThrottle(float throttle)
 {
     m_throttle = throttle;
+    if (m_throttle > 1)
+    {
+        m_throttle = 1;
+    }
+    else if (m_throttle < -1)
+    {
+        m_throttle = -1;
+    }
 
     applyDiffdriveVelocity();
 }

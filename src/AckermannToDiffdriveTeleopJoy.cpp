@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 {
     ros::init(argc, argv, "sia_diffdrive_joy");
 
-    AckermannToDiffdriveTeleopJoy teleop(0.2, 0.2, 1, 1);
+    AckermannToDiffdriveTeleopJoy teleop(1, 1, 1, 1);
 
     ros::spin();
 }
