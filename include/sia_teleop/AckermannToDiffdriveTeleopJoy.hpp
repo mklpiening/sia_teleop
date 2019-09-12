@@ -22,15 +22,17 @@ class AckermannToDiffdriveTeleopJoy : public AckermannToDiffdriveTeleop
     /**
      * @brief construct a new diffdrive teleop object
      *
-     * @param linearAcceleration acceleration for linear velocity in (intensity / s)
-     * @param angularAcceleration acceleration for rotation in (intensity / s)
-     * @param maxLinearVelocity maximum allowed velocity for linear movelemt
-     * @param maxAngularVelocity maximum allowed velocity for rotations
+     * @param maxAcceleration acceleration at its peak in (intensity / s)
+     * @param defaultDeceleration deceleration when rolling
+     * @param maxBrakeDeceleration deceleration whith maximum brake state
+     * @param maxLinearVelocity maximum linear velocity
+     * @param maxAngularVelocity maximum angular velocity
      */
-    AckermannToDiffdriveTeleopJoy(float linearAcceleration  = 1.0,
-                                  float angularAcceleration = 1.0,
-                                  float maxLinearVelocity   = 1.0,
-                                  float maxAngularVelocity  = 1.0);
+    AckermannToDiffdriveTeleopJoy(float maxAcceleration      = 1.0,
+                                  float defaultDeceleration  = 0.1,
+                                  float maxBrakeDeceleration = 1.0,
+                                  float maxLinearVelocity    = 1.0,
+                                  float maxAngularVelocity   = 1.0);
 
     /**
      * @brief Callback of the subscription to the joy topic

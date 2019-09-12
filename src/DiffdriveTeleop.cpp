@@ -1,12 +1,9 @@
 #include "sia_teleop/DiffdriveTeleop.hpp"
 
-DiffdriveTeleop::DiffdriveTeleop(float linearAcceleration,
-                                 float angularAcceleration,
-                                 float maxLinearVelocity,
-                                 float maxAngularVelocity)
-    : m_linearAcceleration(linearAcceleration), m_angularAcceleration(angularAcceleration),
-      m_maxLinearVelocity(maxLinearVelocity), m_maxAngularVelocity(maxAngularVelocity),
-      m_targetAngularVelocity(0), m_targetLinearVelocity(0)
+#include <algorithm>
+
+DiffdriveTeleop::DiffdriveTeleop(float maxLinearVelocity, float maxAngularVelocity)
+    : m_maxLinearVelocity(maxLinearVelocity), m_maxAngularVelocity(maxAngularVelocity)
 {
     m_velCommand.linear.x = 0;
     m_velCommand.linear.y = 0;
@@ -17,75 +14,30 @@ DiffdriveTeleop::DiffdriveTeleop(float linearAcceleration,
     m_velCommand.angular.z = 0;
 
     m_velPublisher = m_nodeHandle.advertise<geometry_msgs::Twist>("cmd_vel", 1);
-    m_updateTimer
-        = m_nodeHandle.createTimer(ros::Duration(0.1), &DiffdriveTeleop::updateVelocity, this);
 }
 
-void DiffdriveTeleop::setTargetVelocity(float targetLinearVelocity, float targetAngularVelocity)
+void DiffdriveTeleop::setVelocity(float linearVelocity, float angularVelocity)
 {
-    m_targetLinearVelocity  = targetLinearVelocity;
-    m_targetAngularVelocity = targetAngularVelocity;
-}
-
-void DiffdriveTeleop::updateVelocity(const ros::TimerEvent& t_event)
-{
-    if (m_velCommand.linear.x < m_targetLinearVelocity)
+    if (linearVelocity > 0)
     {
-        m_velCommand.linear.x += m_linearAcceleration / 10;
-
-        if (m_velCommand.linear.x > m_maxLinearVelocity)
-        {
-            m_velCommand.linear.x = m_maxLinearVelocity;
-        }
-
-        if (m_velCommand.linear.x > m_targetLinearVelocity)
-        {
-            m_velCommand.linear.x = m_targetLinearVelocity;
-        }
+        linearVelocity = std::min(linearVelocity, m_maxLinearVelocity);
     }
-    else if (m_velCommand.linear.x > m_targetLinearVelocity)
+    else if (linearVelocity < 0)
     {
-        m_velCommand.linear.x -= m_linearAcceleration / 10;
-
-        if (m_velCommand.linear.x < -m_maxLinearVelocity)
-        {
-            m_velCommand.linear.x = -m_maxLinearVelocity;
-        }
-
-        if (m_velCommand.linear.x < m_targetLinearVelocity)
-        {
-            m_velCommand.linear.x = m_targetLinearVelocity;
-        }
+        linearVelocity = std::max(linearVelocity, -m_maxLinearVelocity);
     }
 
-    if (m_velCommand.angular.z < m_targetAngularVelocity)
+    if (angularVelocity > 0)
     {
-        m_velCommand.angular.z += m_angularAcceleration / 10;
-
-        if (m_velCommand.angular.z > m_maxAngularVelocity)
-        {
-            m_velCommand.angular.z = m_maxAngularVelocity;
-        }
-
-        if (m_velCommand.angular.z > m_targetAngularVelocity)
-        {
-            m_velCommand.angular.z = m_targetAngularVelocity;
-        }
+        angularVelocity = std::min(angularVelocity, m_maxAngularVelocity);
     }
-    else if (m_velCommand.angular.z > m_targetAngularVelocity)
+    else if (angularVelocity < 0)
     {
-        m_velCommand.angular.z -= m_angularAcceleration / 10;
-
-        if (m_velCommand.angular.z < -m_maxAngularVelocity)
-        {
-            m_velCommand.angular.z = -m_maxAngularVelocity;
-        }
-
-        if (m_velCommand.angular.z < m_targetAngularVelocity)
-        {
-            m_velCommand.angular.z = m_targetAngularVelocity;
-        }
+        angularVelocity = std::max(angularVelocity, -m_maxAngularVelocity);
     }
+
+    m_velCommand.linear.x  = linearVelocity;
+    m_velCommand.angular.z = angularVelocity;
 
     m_velPublisher.publish(m_velCommand);
 }

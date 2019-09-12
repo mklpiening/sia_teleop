@@ -3,14 +3,14 @@
 #include <algorithm>
 #include <iostream>
 
-AckermannToDiffdriveTeleop::AckermannToDiffdriveTeleop(float linearAcceleration,
-                                                       float angularAcceleration,
+AckermannToDiffdriveTeleop::AckermannToDiffdriveTeleop(float maxAcceleration,
+                                                       float defaultDeceleration,
+                                                       float maxBrakeDeceleration,
                                                        float maxLinearVelocity,
                                                        float maxAngularVelocity)
-    : DiffdriveTeleop(
-        linearAcceleration, angularAcceleration, maxLinearVelocity, maxAngularVelocity),
-      m_steeringAngle(0), m_throttle(0), m_brake(0), m_acceleration(0.4), m_speed(0),
-      m_defaultDeceleration(0.01), m_maxBreakDeceleration(10)
+    : DiffdriveTeleop(maxLinearVelocity, maxAngularVelocity), m_maxAcceleration(maxAcceleration),
+      m_defaultDeceleration(defaultDeceleration), m_maxBrakeDeceleration(maxBrakeDeceleration),
+      m_speed(0), m_steeringAngle(0), m_throttle(0), m_brake(0)
 {
     m_updateMovementTimer = m_nodeHandle.createTimer(
         ros::Duration(0.1), &AckermannToDiffdriveTeleop::updateDiffdriveVelocity, this);
@@ -44,18 +44,18 @@ void AckermannToDiffdriveTeleop::updateDiffdriveVelocity(const ros::TimerEvent& 
     if (m_speed > 0)
     {
         // slow the vehicle down in small steps
-        m_speed -= m_defaultDeceleration;
+        m_speed -= m_defaultDeceleration / 10;
 
         // handle breaking
-        m_speed -= m_maxBreakDeceleration * m_brake;
+        m_speed -= m_maxBrakeDeceleration / 10 * m_brake;
     }
     else if (m_speed < 0)
     {
         // slow the vehicle down in small steps
-        m_speed += m_defaultDeceleration;
+        m_speed += m_defaultDeceleration / 10;
 
         // handle breaking
-        m_speed += m_maxBreakDeceleration * m_brake;
+        m_speed += m_maxBrakeDeceleration / 10 * m_brake;
     }
 
     // dont overshoot the deceleration goal
@@ -69,28 +69,27 @@ void AckermannToDiffdriveTeleop::updateDiffdriveVelocity(const ros::TimerEvent& 
     }
 
     float targetSpeed = m_throttle * m_maxLinearVelocity * (1 - 0.5 * abs(m_steeringAngle));
+    float acceleration = std::abs(m_throttle) * m_maxAcceleration / 10;
 
     if ((m_speed < 0 && targetSpeed > 0) || (m_speed > 0 && targetSpeed < 0)
         || std::abs(m_speed) < std::abs(targetSpeed))
     {
         if (m_speed < targetSpeed)
         {
-            m_speed += m_acceleration;
+            m_speed += acceleration;
 
             m_speed = std::min(m_speed, targetSpeed);
         }
         else if (m_speed > targetSpeed)
         {
-            m_speed -= m_acceleration;
+            m_speed -= acceleration;
 
             m_speed = std::max(m_speed, targetSpeed);
         }
     }
 
-    std::cout << m_speed << std::endl;
-
     float targetAngularVelocity
         = (m_speed / m_maxLinearVelocity) * m_steeringAngle * m_maxAngularVelocity;
 
-    setTargetVelocity(m_speed, targetAngularVelocity);
+    setVelocity(m_speed, targetAngularVelocity);
 }

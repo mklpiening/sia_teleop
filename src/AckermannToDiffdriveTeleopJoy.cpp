@@ -2,12 +2,16 @@
 
 #include <iostream>
 
-AckermannToDiffdriveTeleopJoy::AckermannToDiffdriveTeleopJoy(float linearAcceleration,
-                                                             float angularAcceleration,
+AckermannToDiffdriveTeleopJoy::AckermannToDiffdriveTeleopJoy(float maxAcceleration,
+                                                             float defaultDeceleration,
+                                                             float maxBrakeDeceleration,
                                                              float maxLinearVelocity,
                                                              float maxAngularVelocity)
-    : AckermannToDiffdriveTeleop(
-        linearAcceleration, maxAngularVelocity, maxLinearVelocity, maxAngularVelocity)
+    : AckermannToDiffdriveTeleop(maxAcceleration,
+                                 defaultDeceleration,
+                                 maxBrakeDeceleration,
+                                 maxLinearVelocity,
+                                 maxAngularVelocity)
 {
     m_joySubscriber = m_nodeHandle.subscribe<sensor_msgs::Joy>(
         "joy", 15, &AckermannToDiffdriveTeleopJoy::joyCallback, this);
@@ -21,13 +25,14 @@ void AckermannToDiffdriveTeleopJoy::joyCallback(const sensor_msgs::Joy::ConstPtr
 
     setSteeringWheelAngle(leftStickHorizontal);
     setThrottle(rightTrigger - leftTrigger);
+    //setBrake(leftTrigger);
 }
 
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "sia_diffdrive_joy");
 
-    AckermannToDiffdriveTeleopJoy teleop(1, 1, 1, 1);
+    AckermannToDiffdriveTeleopJoy teleop(1, 0.1, 1, 1, 1);
 
     ros::spin();
 }

@@ -13,34 +13,19 @@ class DiffdriveTeleop
     /**
      * @brief construct a new diffdrive teleop object
      *
-     * @param linearAcceleration acceleration for linear velocity in (intensity / s)
-     * @param angularAcceleration acceleration for rotation in (intensity / s)
-     * @param maxLinearVelocity maximum allowed velocity for linear movelemt
-     * @param maxAngularVelocity maximum allowed velocity for rotations
+     * @param maxLinearVelocity maximum linear velocity
+     * @param maxAngularVelocity maximum angular velocity
      */
-    DiffdriveTeleop(float linearAcceleration  = 1.0,
-                    float angularAcceleration = 1.0,
-                    float maxLinearVelocity   = 1.0,
+    DiffdriveTeleop(float maxLinearVelocity   = 1.0,
                     float maxAngularVelocity  = 1.0);
 
     /**
-     * @brief sets the target angular and linear velocity
+     * @brief sets the angular and velocity
      *
-     * Sets the angular and linear velocity for the vehicle. The vehicle will start to accelerate at the
-     * giben acceleration until the target velocity is reached.
-     *
-     * @param targetLinearVelocity targeted linear velocity
-     * @param targetAngularVelocity targeted angular velocity
+     * @param linearVelocity linear velocity
+     * @param angularVelocity angular velocity
      */
-    void setTargetVelocity(float targetLinearVelocity, float targetAngularVelocity);
-
-    /**
-     * @brief callback of timer that updates the velocity according to the given accalerations and
-     * publishes the new velocities to protect motors and gearboxes
-     *
-     * @param t_event timer event
-     */
-    void updateVelocity(const ros::TimerEvent& t_event);
+    void setVelocity(float linearVelocity, float angularVelocity);
 
   protected:
     float m_maxLinearVelocity;
@@ -51,14 +36,6 @@ class DiffdriveTeleop
   private:
     ros::Publisher m_velPublisher;
     geometry_msgs::Twist m_velCommand;
-
-    ros::Timer m_updateTimer;
-
-    float m_linearAcceleration;
-    float m_angularAcceleration;
-
-    float m_targetLinearVelocity;
-    float m_targetAngularVelocity;
 };
 
 #endif
