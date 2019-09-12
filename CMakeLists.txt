@@ -42,15 +42,15 @@ add_dependencies(sia_teleop_joy ${catkin_EXPORTED_TARGETS})
 
 # SiA for control using s32k148 board and automotive hardware
 if(${SIALIB_FOUND})
-  add_executable(sia_teleop 
+  add_executable(sia_teleop_uart
     ${SIA_TELEOP_SOURCES} 
-    src/AckermannToDiffdriveTeleopSiA.cpp)
+    src/AckermannToDiffdriveTeleopSiaUart.cpp)
 
-  target_link_libraries(sia_teleop
+  target_link_libraries(sia_teleop_uart
     ${catkin_LIBRARIES} 
     ${SIALIB_LIBRARIES})
 
-  add_dependencies(sia_teleop ${catkin_EXPORTED_TARGETS})
+  add_dependencies(sia_teleop_uart ${catkin_EXPORTED_TARGETS})
 endif()
 
 
@@ -65,7 +65,7 @@ install(TARGETS
 
 if(${SIALIB_FOUND})
   install(TARGETS 
-    sia_teleop
+    sia_teleop_uart
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 endif()
 
