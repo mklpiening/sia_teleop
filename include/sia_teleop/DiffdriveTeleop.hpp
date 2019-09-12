@@ -36,7 +36,7 @@ class DiffdriveTeleop
 
     /**
      * @brief callback of timer that updates the velocity according to the given accalerations and
-     * publishes the new velocities
+     * publishes the new velocities to protect motors and gearboxes
      *
      * @param t_event timer event
      */

@@ -38,15 +38,31 @@ class AckermannToDiffdriveTeleop : public DiffdriveTeleop
      */
     void setThrottle(float throttle);
 
+    /**
+     * @brief brakes the vehicle
+     *
+     * @param brake state of brake between 0 and 1 where 0 is no braking and 1 is full braking
+     */
+    void setBrake(float brake);
+
   private:
     /**
      * @brief publshes the diffdrive velocities according to the cuttent steeringwheel angle and the
      * throttle state
      */
-    void applyDiffdriveVelocity();
+    void updateDiffdriveVelocity(const ros::TimerEvent& t_event);
+
+    ros::Timer m_updateMovementTimer;
+
+    float m_defaultDeceleration;
+    float m_maxBreakDeceleration;
+    float m_acceleration;
+
+    float m_speed;
 
     float m_steeringAngle;
     float m_throttle;
+    float m_brake;
 };
 
 #endif
