@@ -55,7 +55,7 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "sia_diffdrive_uart");
 
     AckermannToDiffdriveTeleopSiaUart teleop(
-        "/dev/ttyACM0", 115200, 90.0, 100.0, 100.0, 1, 0.1, 1, 1, 1);
+        "/dev/ttyACM0", 115200, 90.0, 100.0, 100.0, 1.5, 0.4, 2, 1, 1);
 
     ros::spin();
 }

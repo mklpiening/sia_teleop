@@ -13,7 +13,7 @@ AckermannToDiffdriveTeleop::AckermannToDiffdriveTeleop(float maxAcceleration,
       m_speed(0), m_steeringAngle(0), m_throttle(0), m_brake(0)
 {
     m_updateMovementTimer = m_nodeHandle.createTimer(
-        ros::Duration(0.1), &AckermannToDiffdriveTeleop::updateDiffdriveVelocity, this);
+        ros::Duration(0.01), &AckermannToDiffdriveTeleop::updateDiffdriveVelocity, this);
 }
 
 void AckermannToDiffdriveTeleop::setSteeringWheelAngle(float angle)
@@ -44,18 +44,18 @@ void AckermannToDiffdriveTeleop::updateDiffdriveVelocity(const ros::TimerEvent& 
     if (m_speed > 0)
     {
         // slow the vehicle down in small steps
-        m_speed -= m_defaultDeceleration / 10;
+        m_speed -= m_defaultDeceleration / 100;
 
         // handle breaking
-        m_speed -= m_maxBrakeDeceleration / 10 * m_brake;
+        m_speed -= m_maxBrakeDeceleration / 100 * m_brake;
     }
     else if (m_speed < 0)
     {
         // slow the vehicle down in small steps
-        m_speed += m_defaultDeceleration / 10;
+        m_speed += m_defaultDeceleration / 100;
 
         // handle breaking
-        m_speed += m_maxBrakeDeceleration / 10 * m_brake;
+        m_speed += m_maxBrakeDeceleration / 100 * m_brake;
     }
 
     // dont overshoot the deceleration goal
@@ -68,8 +68,8 @@ void AckermannToDiffdriveTeleop::updateDiffdriveVelocity(const ros::TimerEvent& 
         m_speed = std::max(m_speed, 0.0f);
     }
 
-    float targetSpeed = m_throttle * m_maxLinearVelocity * (1 - 0.5 * abs(m_steeringAngle));
-    float acceleration = std::abs(m_throttle) * m_maxAcceleration / 10;
+    float targetSpeed  = m_throttle;
+    float acceleration = std::abs(m_throttle) * m_maxAcceleration / 100;
 
     if ((m_speed < 0 && targetSpeed > 0) || (m_speed > 0 && targetSpeed < 0)
         || std::abs(m_speed) < std::abs(targetSpeed))
@@ -88,8 +88,8 @@ void AckermannToDiffdriveTeleop::updateDiffdriveVelocity(const ros::TimerEvent& 
         }
     }
 
-    float targetAngularVelocity
-        = (m_speed / m_maxLinearVelocity) * m_steeringAngle * m_maxAngularVelocity;
+    float targetLinearVelocity  = m_speed * m_maxLinearVelocity * (1 - 0.5 * abs(m_steeringAngle));
+    float targetAngularVelocity = m_speed * m_steeringAngle * m_maxAngularVelocity;
 
-    setVelocity(m_speed, targetAngularVelocity);
+    setVelocity(targetLinearVelocity, targetAngularVelocity);
 }
