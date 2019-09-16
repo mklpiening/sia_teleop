@@ -31,15 +31,21 @@ class AckermannToDiffdriveTeleopSiaUart : public AckermannToDiffdriveTeleop
                                       float defaultDeceleration   = 0.1,
                                       float maxBrakeDeceleration  = 1.0,
                                       float maxLinearVelocity     = 1.0,
-                                      float maxAngularVelocity    = 1.0);
+                                      float maxAngularVelocity    = 1.0,
+                                      int numGears                = 1);
 
   private:
     sialib::SialibUart m_sialib;
 
+    int m_numGears;
+    int m_currentGear;
+    float m_maxMaxLinearVelocity;
+    float m_maxMaxAngularVelocity;
+
     float m_steeringWheelAngle;
     float m_throttle;
     float m_brake;
-    sialib::driveState_t m_driveState;
+    sialib::DriveState m_driveState;
 };
 
 #endif
