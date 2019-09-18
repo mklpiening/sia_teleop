@@ -1,18 +1,16 @@
-#ifndef ACKERMANN_TO_DIFFDRIVE_TELEOP_SIA_HPP
-#define ACKERMANN_TO_DIFFDRIVE_TELEOP_SIA_HPP
+#ifndef ACKERMANN_TO_DIFFDRIVE_TELEOP_SIA_UART
+#define ACKERMANN_TO_DIFFDRIVE_TELEOP_SIA_UART
 
-#include "sia_teleop/AckermannToDiffdriveTeleop.hpp"
+#include "sia_teleop/AckermannToDiffdriveTeleopSia.hpp"
 
-#include <sialib/SialibUart.hpp>
-
-class AckermannToDiffdriveTeleopSiaUart : public AckermannToDiffdriveTeleop
+class AckermannToDiffdriveTeleopSiaUart : public AckermannToDiffdriveTeleopSia
 {
   public:
     /**
      * @brief construct a new diffdrive teleop object
      *
-     * @param port serial port for communication
-     * @param baudRate baud rate for serial port
+     * @param port mountpoint of the target device
+     * @param baudRate baud rate for the uart communication with the target device
      * @param maxSteeringWheelAngle steering wheel angle for maximum steering angle
      * @param maxThrottleState value for full throttle
      * @param maxBrakeState value for full brake
@@ -33,19 +31,6 @@ class AckermannToDiffdriveTeleopSiaUart : public AckermannToDiffdriveTeleop
                                       float maxLinearVelocity     = 1.0,
                                       float maxAngularVelocity    = 1.0,
                                       int numGears                = 1);
-
-  private:
-    sialib::SialibUart m_sialib;
-
-    int m_numGears;
-    int m_currentGear;
-    float m_maxMaxLinearVelocity;
-    float m_maxMaxAngularVelocity;
-
-    float m_steeringWheelAngle;
-    float m_throttle;
-    float m_brake;
-    sialib::DriveState m_driveState;
 };
 
-#endif
+#endif // ACKERMANN_TO_DIFFDRIVE_TELEOP_SIA_UART

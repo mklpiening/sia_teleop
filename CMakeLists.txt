@@ -44,6 +44,7 @@ add_dependencies(sia_teleop_joy ${catkin_EXPORTED_TARGETS})
 if(${SIALIB_FOUND})
   add_executable(sia_teleop_uart
     ${SIA_TELEOP_SOURCES} 
+    src/AckermannToDiffdriveTeleopSia.cpp
     src/AckermannToDiffdriveTeleopSiaUart.cpp)
 
   target_link_libraries(sia_teleop_uart
@@ -51,6 +52,18 @@ if(${SIALIB_FOUND})
     ${SIALIB_LIBRARIES})
 
   add_dependencies(sia_teleop_uart ${catkin_EXPORTED_TARGETS})
+
+
+  add_executable(sia_teleop_udp
+    ${SIA_TELEOP_SOURCES} 
+    src/AckermannToDiffdriveTeleopSia.cpp
+    src/AckermannToDiffdriveTeleopSiaUdp.cpp)
+
+  target_link_libraries(sia_teleop_udp
+    ${catkin_LIBRARIES} 
+    ${SIALIB_LIBRARIES})
+
+  add_dependencies(sia_teleop_udp ${catkin_EXPORTED_TARGETS})
 endif()
 
 
@@ -66,6 +79,10 @@ install(TARGETS
 if(${SIALIB_FOUND})
   install(TARGETS 
     sia_teleop_uart
+    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+  install(TARGETS 
+    sia_teleop_udp
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 endif()
 
