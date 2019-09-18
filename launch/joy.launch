@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+  <node pkg="joy" type="joy_node" name="joy_node">
+    <param name="autorepeat_rate" value="10"/>
+    <param name="dev" value="/dev/input/js0"/>
+  </node>
+
+  <node name="sia_teleop_joy" pkg="sia_teleop" type="sia_teleop_joy" respawn="false" output="screen">
+    <param name="max_acceleration" type="double" value="1.5" />
+    <param name="default_deceleration" type="double" value="0.4" />
+    <param name="max_brake_deceleration" type="double" value="2.0" />
+    <param name="max_linear_velocity" type="double" value="1.0" />
+    <param name="max_angular_velocity" type="double" value="1.0" />
+  </node>
+</launch>

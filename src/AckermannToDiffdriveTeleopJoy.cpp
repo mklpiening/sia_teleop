@@ -25,14 +25,31 @@ void AckermannToDiffdriveTeleopJoy::joyCallback(const sensor_msgs::Joy::ConstPtr
 
     setSteeringWheelAngle(leftStickHorizontal);
     setThrottle(rightTrigger - leftTrigger);
-    //setBrake(leftTrigger);
+    // setBrake(leftTrigger);
 }
 
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "sia_diffdrive_joy");
 
-    AckermannToDiffdriveTeleopJoy teleop(1, 0.1, 1, 1, 1);
+    ros::NodeHandle nhPrivate("~");
+
+    float maxAcceleration;
+    nhPrivate.param("max_acceleration", maxAcceleration, 1.5f);
+    float defaultDeceleration;
+    nhPrivate.param("default_deceleration", defaultDeceleration, 0.4f);
+    float maxBrakeDeceleration;
+    nhPrivate.param("max_brake_deceleration", maxBrakeDeceleration, 2.0f);
+    float maxLinearVelocity;
+    nhPrivate.param("max_linear_velocity", maxLinearVelocity, 1.0f);
+    float maxAngularVelocity;
+    nhPrivate.param("max_angular_velocity", maxAngularVelocity, 1.0f);
+
+    AckermannToDiffdriveTeleopJoy teleop(maxAcceleration,
+                                         defaultDeceleration,
+                                         maxBrakeDeceleration,
+                                         maxLinearVelocity,
+                                         maxAngularVelocity);
 
     ros::spin();
 }

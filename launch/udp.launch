@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="sia_teleop_udp" pkg="sia_teleop" type="sia_teleop_udp" respawn="false" output="screen">
+    <param name="port" type="int" value="1337" />
+    <param name="max_steering_angle" type="double" value="90.0" />
+    <param name="max_throttle_state" type="double" value="100.0" />
+    <param name="max_brake_state" type="double" value="100.0" />
+    <param name="max_acceleration" type="double" value="1.5" />
+    <param name="default_deceleration" type="double" value="0.4" />
+    <param name="max_brake_deceleration" type="double" value="2.0" />
+    <param name="max_linear_velocity" type="double" value="1.0" />
+    <param name="max_angular_velocity" type="double" value="1.0" />
+    <param name="num_gears" type="int" value="3" />
+  </node>
+</launch>
