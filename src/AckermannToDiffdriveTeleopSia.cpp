@@ -19,7 +19,8 @@ AckermannToDiffdriveTeleopSia::AckermannToDiffdriveTeleopSia(std::shared_ptr<sia
                                  maxAngularVelocity / numGears),
       m_sialib(sialib), m_numGears(numGears), m_currentGear(0),
       m_maxMaxLinearVelocity(maxLinearVelocity), m_maxMaxAngularVelocity(maxAngularVelocity),
-      m_steeringWheelAngle(0), m_throttle(0), m_brake(0), m_driveState(sialib::NEUTRAL)
+      m_steeringWheelAngle(0), m_throttle(0), m_brake(0), m_driveState(sialib::NEUTRAL),
+      m_leftLeverState(false), m_rightLeverState(false)
 {
     m_sialib->steeringWheelHandler = [this, maxSteeringWheelAngle](int angle) {
         m_steeringWheelAngle = -1 * static_cast<float>(angle) / maxSteeringWheelAngle;
@@ -57,17 +58,40 @@ AckermannToDiffdriveTeleopSia::AckermannToDiffdriveTeleopSia(std::shared_ptr<sia
 
     m_sialib->shiftUpHandler = [this]() {
         m_currentGear++;
-        m_currentGear = std::min(m_numGears - 1, m_currentGear);
-        std::cout << "Gear: " << m_currentGear << std::endl;
-        m_maxAngularVelocity = (m_maxMaxAngularVelocity * (m_currentGear + 1)) / m_numGears;
-        m_maxLinearVelocity  = (m_maxMaxLinearVelocity * (m_currentGear + 1)) / m_numGears;
+        updateGear();
     };
 
     m_sialib->shiftDownHandler = [this]() {
         m_currentGear--;
-        m_currentGear = std::max(0, m_currentGear);
-        std::cout << "Gear: " << m_currentGear << std::endl;
-        m_maxAngularVelocity = (m_maxMaxAngularVelocity * (m_currentGear + 1)) / m_numGears;
-        m_maxLinearVelocity  = (m_maxMaxLinearVelocity * (m_currentGear + 1)) / m_numGears;
+        updateGear();
     };
+
+    m_sialib->rightLeverHandler = [this](bool pulled) {
+        if (pulled && !m_rightLeverState)
+        {
+            m_currentGear++;
+            updateGear();
+        }
+        m_rightLeverState = pulled;
+    };
+
+    m_sialib->leftLeverHandler = [this](bool pulled) {
+        if (pulled && !m_leftLeverState)
+        {
+            m_currentGear--;
+            updateGear();
+        }
+        m_leftLeverState = pulled;
+    };
+}
+
+void AckermannToDiffdriveTeleopSia::updateGear()
+{
+    m_currentGear = std::max(0, m_currentGear);
+    m_currentGear = std::min(m_numGears - 1, m_currentGear);
+
+    std::cout << "Gear: " << m_currentGear << std::endl;
+
+    m_maxAngularVelocity = (m_maxMaxAngularVelocity * (m_currentGear + 1)) / m_numGears;
+    m_maxLinearVelocity  = (m_maxMaxLinearVelocity * (m_currentGear + 1)) / m_numGears;
 }

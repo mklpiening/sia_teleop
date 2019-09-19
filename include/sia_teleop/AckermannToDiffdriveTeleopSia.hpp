@@ -34,6 +34,8 @@ class AckermannToDiffdriveTeleopSia : public AckermannToDiffdriveTeleop
                                   int numGears                = 1);
 
   private:
+    void updateGear();
+
     std::shared_ptr<sialib::Sialib> m_sialib;
 
     int m_numGears;
@@ -45,6 +47,8 @@ class AckermannToDiffdriveTeleopSia : public AckermannToDiffdriveTeleop
     float m_throttle;
     float m_brake;
     sialib::DriveState m_driveState;
+    bool m_leftLeverState;
+    bool m_rightLeverState;
 };
 
 #endif
