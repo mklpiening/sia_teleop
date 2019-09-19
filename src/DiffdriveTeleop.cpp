@@ -47,7 +47,7 @@ void DiffdriveTeleop::setVelocity(float linearVelocity, float angularVelocity)
     m_noMessageReceivedCnt = 0;
 }
 
-void checkLastMessage(const ros::TimerEvent& t_event)
+void DiffdriveTeleop::checkLastMessage(const ros::TimerEvent& t_event)
 {
     m_noMessageReceivedCnt++;
     if (m_noMessageReceivedCnt >= 2)

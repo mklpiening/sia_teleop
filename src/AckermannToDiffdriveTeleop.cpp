@@ -21,24 +21,24 @@ void AckermannToDiffdriveTeleop::setSteeringWheelAngle(float angle)
     m_steeringAngle = angle;
     m_steeringAngle = std::max(m_steeringAngle, -1.0f);
     m_steeringAngle = std::min(m_steeringAngle, 1.0f);
-    
-    m_msgReceived   = true;
+
+    m_msgReceived = true;
 }
 
 void AckermannToDiffdriveTeleop::setThrottle(float throttle)
 {
-    m_throttle    = throttle;
-    m_throttle    = std::max(m_throttle, -1.0f);
-    m_throttle    = std::min(m_throttle, 1.0f);
+    m_throttle = throttle;
+    m_throttle = std::max(m_throttle, -1.0f);
+    m_throttle = std::min(m_throttle, 1.0f);
 
     m_msgReceived = true;
 }
 
 void AckermannToDiffdriveTeleop::setBrake(float brake)
 {
-    m_brake       = brake;
-    m_brake       = std::max(m_brake, 0.0f);
-    m_brake       = std::min(m_brake, 1.0f);
+    m_brake = brake;
+    m_brake = std::max(m_brake, 0.0f);
+    m_brake = std::min(m_brake, 1.0f);
 
     m_msgReceived = true;
 }
