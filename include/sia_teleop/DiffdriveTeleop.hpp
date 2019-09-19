@@ -28,8 +28,14 @@ class DiffdriveTeleop
     void setVelocity(float linearVelocity, float angularVelocity);
 
   protected:
+    void checkLastMessage(const ros::TimerEvent& t_event);
+
     float m_maxLinearVelocity;
     float m_maxAngularVelocity;
+
+    int m_noMessageReceivedCnt;
+
+    ros::Timer m_checkMessageTimer;
 
     ros::NodeHandle m_nodeHandle;
 

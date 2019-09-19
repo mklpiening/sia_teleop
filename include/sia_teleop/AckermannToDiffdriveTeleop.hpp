@@ -60,6 +60,8 @@ class AckermannToDiffdriveTeleop : public DiffdriveTeleop
     float m_maxBrakeDeceleration;
     float m_maxAcceleration;
 
+    bool m_msgReceived;
+
     float m_speed;
 
     float m_steeringAngle;
